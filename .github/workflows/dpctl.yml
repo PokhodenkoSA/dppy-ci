@@ -25,10 +25,8 @@ jobs:
           ref: gold/2021
           fetch-depth: 0
 
-      - name: Add conda to system path
-        run: echo $CONDA/bin >> $GITHUB_PATH
-      - name: Install conda-build
-        run: conda install conda-build
+      - name: Setup conda-build
+        uses: ./.github/actions/conda-build
 
       - name: Set CHANNELS
         run: echo "CHANNELS=-c defaults -c intel --override-channels" >> $GITHUB_ENV
