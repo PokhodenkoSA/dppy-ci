@@ -1,6 +1,12 @@
 name: dpctl
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: git ref
+        required: true
+        default: gold/2021
 
 env:
   PACKAGE_NAME: dpctl
@@ -22,7 +28,7 @@ jobs:
         with:
           repository: IntelPython/dpctl
           path: dpctl
-          ref: gold/2021
+          ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
 
       - name: Setup conda-build
