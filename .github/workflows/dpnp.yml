@@ -28,19 +28,16 @@ jobs:
           path: oneDPL
           ref: oneDPL-2021.6.1-release
 
-      - name: Add conda to system path
-        run: echo $CONDA/bin >> $GITHUB_PATH
-      - name: Install conda-build
-        run: conda install conda-build
-
-      - name: Set CHANNELS
-        run: echo "CHANNELS=-c dppy/label/dev -c intel -c defaults --override-channels" >> $GITHUB_ENV
+      - name: Setup conda-build
+        uses: ./.github/actions/conda-build
 
       - name: Set DPLROOT
         run: echo "DPLROOT=$GITHUB_WORKSPACE/oneDPL" >> $GITHUB_ENV
 
       - name: Build conda package
         working-directory: dpnp
+        env:
+          CHANNELS: -c dppy/label/dev -c intel -c defaults --override-channels
         run: ../scripts/build_conda_package.sh ${{ matrix.python }}
 
       - name: Upload artifact
