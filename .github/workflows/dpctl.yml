@@ -30,6 +30,7 @@ jobs:
       - name: Install conda-build
         run: conda install conda-build
       - name: Build conda package
+        working-directory: dpctl
         run: |
           CHANNELS="-c defaults -c intel --override-channels"
           VERSIONS="--python ${{ matrix.python }}"
