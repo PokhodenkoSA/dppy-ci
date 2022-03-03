@@ -28,17 +28,14 @@ jobs:
         run: echo $CONDA/bin >> $GITHUB_PATH
       - name: Install conda-build
         run: conda install conda-build
+
+      - name: Set CHANNELS
+        run: echo "CHANNELS=-c defaults -c intel --override-channels" >> $GITHUB_ENV
+
       - name: Build conda package
         working-directory: dpctl
-        run: |
-          CHANNELS="-c defaults -c intel --override-channels"
-          VERSIONS="--python ${{ matrix.python }}"
-          TEST="--no-test"
-          conda build \
-            $TEST \
-            $VERSIONS \
-            $CHANNELS \
-            conda-recipe
+        run: ../scripts/build_conda_package.sh ${{ matrix.python }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:

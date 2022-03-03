@@ -33,6 +33,9 @@ jobs:
       - name: Install conda-build
         run: conda install conda-build
 
+      - name: Set CHANNELS
+        run: echo "CHANNELS=-c dppy/label/dev -c intel -c defaults --override-channels" >> $GITHUB_ENV
+
       - name: Set DPLROOT
         run: echo "DPLROOT=$GITHUB_WORKSPACE/oneDPL" >> $GITHUB_ENV
 
