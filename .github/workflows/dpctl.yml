@@ -7,6 +7,10 @@ on:
         description: git ref
         required: true
         default: gold/2021
+      label:
+        description: label
+        required: true
+        default: dppy-ci
 
 env:
   PACKAGE_NAME: dpctl
@@ -45,4 +49,13 @@ jobs:
         with:
           name: ${{ env.PACKAGE_NAME }} ${{ runner.os }} Python ${{ matrix.python }}
           path: /usr/share/miniconda/conda-bld/linux-64/${{ env.PACKAGE_NAME }}-*.tar.bz2
+
+      - name: Setup anaconda-client
+        uses: ./.github/actions/anaconda-client
+
+      - name: Upload to anaconda channel
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          LABEL: ${{ github.event.inputs.label }}
+        run: anaconda --token $ANACONDA_TOKEN upload --user dppy --label $LABEL ${PACKAGE_NAME}-*.tar.bz2
 
