@@ -44,11 +44,14 @@ jobs:
           CHANNELS: -c defaults -c intel --override-channels
         run: ../scripts/build_conda_package.sh ${{ matrix.python }}
 
+      - name: Move conda package to current folder
+        run: mv $CONDA/conda-bld/linux-64/${{ env.PACKAGE_NAME }}-*.tar.bz2 .
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PACKAGE_NAME }} ${{ runner.os }} Python ${{ matrix.python }}
-          path: /usr/share/miniconda/conda-bld/linux-64/${{ env.PACKAGE_NAME }}-*.tar.bz2
+          path: ${{ env.PACKAGE_NAME }}-*.tar.bz2
 
       - name: Setup anaconda-client
         uses: ./.github/actions/anaconda-client
