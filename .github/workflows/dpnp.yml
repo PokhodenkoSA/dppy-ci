@@ -52,7 +52,7 @@ jobs:
       - name: Build conda package
         working-directory: dpnp
         env:
-          CHANNELS: -c dppy/label/dev -c intel -c defaults --override-channels
+          CHANNELS: -c dppy/label/dppy-ci -c dppy/label/dev -c intel -c defaults --override-channels
         run: ../scripts/build_conda_package.sh ${{ matrix.python }}
 
       - name: Move conda package to current folder
