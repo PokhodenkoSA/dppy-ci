@@ -1,0 +1,55 @@
+name: numba-dppy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: git ref
+        required: true
+        default: gold/2021
+      label:
+        description: label
+        required: true
+        default: dppy-ci
+
+env:
+  PACKAGE_NAME: numba-dppy
+  MODULE_NAME: numba_dppy
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python: ["3.8", "3.9"]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Checkout DPNP
+        uses: actions/checkout@v3
+        with:
+          repository: IntelPython/numba-dppy
+          path: numba-dppy
+          ref: ${{ github.event.inputs.ref }}
+          fetch-depth: 0
+
+      - name: Setup conda-build
+        uses: ./.github/actions/conda-build
+
+      - name: Build conda package
+        working-directory: numba-dppy
+        env:
+          CHANNELS: -c dppy/label/dppy-ci -c dppy/label/dev -c intel -c defaults -c numba -c numba/label/dev --override-channels
+        run: ../scripts/build_conda_package.sh ${{ matrix.python }}
+
+      - name: Move conda package to current folder
+        run: mv $CONDA/conda-bld/linux-64/${{ env.PACKAGE_NAME }}-*.tar.bz2 .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PACKAGE_NAME }} ${{ runner.os }} ${{ matrix.python }}
+          path: ${{ env.PACKAGE_NAME }}-*.tar.bz2
