@@ -1,10 +1,24 @@
 name: dpnp
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: git ref
+        required: true
+        default: gold/2021
+      label:
+        description: label
+        required: true
+        default: dppy-ci
+
+env:
+  PACKAGE_NAME: dpnp
+  MODULE_NAME: dpnp
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -19,6 +33,7 @@ jobs:
         with:
           repository: IntelPython/dpnp
           path: dpnp
+          ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
 
       - name: Checkout oneDPL
@@ -40,8 +55,20 @@ jobs:
           CHANNELS: -c dppy/label/dev -c intel -c defaults --override-channels
         run: ../scripts/build_conda_package.sh ${{ matrix.python }}
 
+      - name: Move conda package to current folder
+        run: mv $CONDA/conda-bld/linux-64/${{ env.PACKAGE_NAME }}-*.tar.bz2 .
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: dpnp ${{ runner.os }} ${{ matrix.python }}
-          path: /usr/share/miniconda/conda-bld/linux-64/dpnp-*.tar.bz2
+          name: ${{ env.PACKAGE_NAME }} ${{ runner.os }} ${{ matrix.python }}
+          path: ${{ env.PACKAGE_NAME }}-*.tar.bz2
+
+      - name: Setup anaconda-client
+        uses: ./.github/actions/anaconda-client
+
+      - name: Upload to anaconda channel
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          LABEL: ${{ github.event.inputs.label }}
+        run: anaconda --token $ANACONDA_TOKEN upload --user dppy --label $LABEL ${PACKAGE_NAME}-*.tar.bz2
