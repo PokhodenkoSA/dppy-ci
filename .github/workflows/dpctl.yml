@@ -22,6 +22,7 @@ jobs:
         with:
           repository: IntelPython/dpctl
           path: dpctl
+          ref: gold/2021
           fetch-depth: 0
 
       - name: Add conda to system path
