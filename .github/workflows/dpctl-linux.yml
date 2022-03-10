@@ -1,4 +1,4 @@
-name: dpctl
+name: dpctl / Linux
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ env:
   MODULE_NAME: dpctl
 
 jobs:
-  build_linux:
+  main:
     runs-on: ubuntu-latest
 
     strategy:
@@ -62,4 +62,3 @@ jobs:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           LABEL: ${{ github.event.inputs.label }}
         run: anaconda --token $ANACONDA_TOKEN upload --user dppy --label $LABEL ${PACKAGE_NAME}-*.tar.bz2
-

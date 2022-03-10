@@ -1,0 +1,11 @@
+name: Setup anaconda-client
+description: 'Activate conda and install anaconda-client'
+runs:
+  using: "composite"
+  steps:
+    - run: echo $env:CONDA\condabin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+    - run: echo $env:CONDA\Scripts | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+    - run: conda install anaconda-client
+      shell: cmd

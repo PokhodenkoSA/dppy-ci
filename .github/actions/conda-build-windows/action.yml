@@ -1,0 +1,9 @@
+name: Setup conda-build
+description: 'Activate conda and install conda-build'
+runs:
+  using: "composite"
+  steps:
+    - run: echo $env:CONDA\condabin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+    - run: conda install conda-build
+      shell: cmd
