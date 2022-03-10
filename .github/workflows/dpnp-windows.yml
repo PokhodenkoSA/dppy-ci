@@ -1,4 +1,4 @@
-name: dpctl / Windows
+name: dpnp / Windows
 
 on:
   workflow_dispatch:
@@ -13,10 +13,10 @@ on:
         default: dppy-ci
 
 env:
-  PACKAGE_NAME: dpctl
+  PACKAGE_NAME: dpnp
 
 jobs:
-  main:
+  build:
     runs-on: windows-latest
 
     strategy:
@@ -27,19 +27,29 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Checkout dpctl
+      - name: Checkout DPNP
         uses: actions/checkout@v3
         with:
-          repository: IntelPython/dpctl
-          path: dpctl
+          repository: IntelPython/dpnp
+          path: dpnp
           ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
+
+      - name: Checkout oneDPL
+        uses: actions/checkout@v3
+        with:
+          repository: oneapi-src/oneDPL
+          path: oneDPL
+          ref: oneDPL-2021.6.1-release
 
       - name: Setup conda-build
         uses: ./.github/actions/conda-build-windows
 
+      - name: Set DPLROOT
+        run: echo "DPLROOT=$GITHUB_WORKSPACE/oneDPL" >> $GITHUB_ENV
+
       - name: Build conda package
-        working-directory: dpctl
+        working-directory: dpnp
         env:
           CHANNELS: -c defaults -c intel --override-channels
         run: conda build --no-test --python ${{ matrix.python }} ${{ env.CHANNELS }} conda-recipe

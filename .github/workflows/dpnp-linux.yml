@@ -1,4 +1,4 @@
-name: dpnp
+name: dpnp / Linux
 
 on:
   workflow_dispatch:
