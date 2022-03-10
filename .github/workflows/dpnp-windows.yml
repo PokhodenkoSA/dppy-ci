@@ -46,7 +46,7 @@ jobs:
         uses: ./.github/actions/conda-build-windows
 
       - name: Set DPLROOT
-        run: echo "DPLROOT=$GITHUB_WORKSPACE/oneDPL" >> $GITHUB_ENV
+        run: echo "DPLROOT=$env:GITHUB_WORKSPACE\oneDPL" >> $env:GITHUB_ENV
 
       - name: Build conda package
         working-directory: dpnp
