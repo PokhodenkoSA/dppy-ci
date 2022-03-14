@@ -3,6 +3,10 @@ name: dpnp / Windows
 on:
   workflow_dispatch:
     inputs:
+      repository:
+        description: repository
+        required: true
+        default: IntelPython/dpnp
       ref:
         description: git ref
         required: true
@@ -30,7 +34,7 @@ jobs:
       - name: Checkout DPNP
         uses: actions/checkout@v3
         with:
-          repository: IntelPython/dpnp
+          repository: ${{ github.event.inputs.repository }}
           path: dpnp
           ref: ${{ github.event.inputs.ref }}
           fetch-depth: 0
