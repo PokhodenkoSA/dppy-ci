@@ -1,4 +1,4 @@
-name: numba-dppy
+name: numba-dppy / Linux
 
 on:
   workflow_dispatch:
@@ -14,10 +14,9 @@ on:
 
 env:
   PACKAGE_NAME: numba-dppy
-  MODULE_NAME: numba_dppy
 
 jobs:
-  build_linux:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
@@ -62,4 +61,3 @@ jobs:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           LABEL: ${{ github.event.inputs.label }}
         run: anaconda --token $ANACONDA_TOKEN upload --user dppy --label $LABEL ${PACKAGE_NAME}-*.tar.bz2
-
