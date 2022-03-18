@@ -20,7 +20,7 @@ env:
   PACKAGE_NAME: dpnp
 
 jobs:
-  build:
+  main:
     runs-on: windows-latest
 
     strategy:

@@ -16,7 +16,7 @@ env:
   PACKAGE_NAME: numba-dppy
 
 jobs:
-  build:
+  main:
     runs-on: windows-latest
 
     strategy:
